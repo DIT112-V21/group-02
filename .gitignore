@@ -45,3 +45,25 @@ __pycache__/
 test.ino
 local.py
 .car
+
+# Android implementation
+
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+# Added
+.idea
+.vscode
+.settings
