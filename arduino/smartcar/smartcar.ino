@@ -18,12 +18,26 @@
 WiFiClient net;
 #endif
 MQTTClient mqtt;
+
+
+
 ArduinoRuntime arduinoRuntime;
 BrushedMotor leftMotor(arduinoRuntime, smartcarlib::pins::v2::leftMotorPins);
 BrushedMotor rightMotor(arduinoRuntime, smartcarlib::pins::v2::rightMotorPins);
 DifferentialControl control(leftMotor, rightMotor);
 
 SimpleCar car(control);
+
+
+
+
+
+ArduinoRuntime arduinoRuntime1;
+BrushedMotor leftMotor1(arduinoRuntime, smartcarlib::pins::v2::leftMotorPins);
+BrushedMotor rightMotor1(arduinoRuntime, smartcarlib::pins::v2::rightMotorPins);
+DifferentialControl control1(leftMotor, rightMotor);
+
+SimpleCar car1(control1);
 
 const auto oneSecond = 1000UL;
 const auto safetyTime = 100UL;
@@ -39,17 +53,16 @@ int safetySpeed = 0;
 SR04 front(arduinoRuntime, triggerPin, echoPin, maxDistance);
 GP2D120 frontIR(arduinoRuntime, redFrontPin);
 
-//std::vector<char> frameBuffer;
+std::vector<char> frameBuffer;
 
 void setup()
 {
     Serial.begin(9600);
+    car1.setSpeed(50);
 #ifdef __SMCE__
-    //int OV767X::begin(int resolution, int format, int fps)
-    // Camera.begin(QVGA, RGB888, 60);
-    // frameBuffer.resize(Camera.width() * Camera.height() * Camera.bytesPerPixel());
+    Camera.begin(QVGA, RGB888, 15);
+    frameBuffer.resize(Camera.width() * Camera.height() * Camera.bytesPerPixel());
     mqtt.begin(ip, port, WiFi);
-    // mqtt.begin(WiFi); // Will connect to localhost
 #else
     mqtt.begin(net);
 #endif
@@ -69,12 +82,24 @@ void loop()
         mqtt.loop();
         const auto currentTime = millis();
         obstacleDetection(currentTime);
+        cameraFeed(currentTime);
     }
 #ifdef __SMCE__
     // Avoid over-using the CPU if we are running in the emulator
     delay(35);
 #endif
 }
+
+void cameraFeed(long currentTime){
+    static auto previousFrame = 0UL;
+    if (currentTime - previousFrame >= 100) {
+      previousFrame = currentTime;
+      Camera.readFrame(frameBuffer.data());
+      mqtt.publish("/smartcar/camera", frameBuffer.data(), frameBuffer.size(),
+                   false, 0);
+        println(frameBuffer.)
+     }
+   }
 
 void handleInput(String topic, String message)
 {
@@ -127,14 +152,7 @@ void obstacleDetection(long currentTime)
 
 boolean checkSensor(int sensorData, int max)
 {
-    if (0 < sensorData && sensorData < max)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return (0 < sensorData && sensorData < max);
 }
 
 int msgToInt(String msg)
