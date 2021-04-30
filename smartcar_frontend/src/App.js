@@ -14,7 +14,6 @@ function App() {
         <Route exact path="/race" component={Race} />
         <Route exact path="/leaderboard" component={LeaderBoard} />
         <Route exact path="/race_times" component={Times} />
-
       </Router>
     </div>
   );
