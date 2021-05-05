@@ -50,6 +50,7 @@ boolean allowForward = true;
 boolean allowBackward = true;
 boolean overrideAngle = false;
 boolean overrideSpeed = false;
+String difficultyLevel = "";
 int safetySpeed = 0;
 
 //Sensor Setup
@@ -75,7 +76,13 @@ void setup()
     {
         mqtt.subscribe("/smartcar/control/#", 1);
         mqtt.onMessage([](String topic, String message) {
-            handleInput(topic, message);
+            if (topic == difficulty)
+            {
+                difficultyLevel = message;
+                Serial.print("difficulty level is : " + difficultyLevel);
+            }
+            else
+                handleInput(topic, message);
         });
     }
 }
@@ -102,9 +109,9 @@ void loop()
     delay(35);
 #endif
 }
+
 void handleInput(String topic, String message)
 {
-
     int msg = msgToInt(message);
     if (topic == forward && allowForward)
     {
