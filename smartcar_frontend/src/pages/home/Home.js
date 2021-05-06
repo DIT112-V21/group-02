@@ -4,10 +4,6 @@ import logo from "../../resources/logo.png";
 import "./Home.css";
 import SpringDemo from "../../components/animatedCar/SpringDemo";
 
-const mqtt = require("mqtt");
-const client = mqtt.connect("ws://localhost:8888");
-const difficulty = "/smartcar/control/difficulty";
-
 class HomeComponent extends React.Component {
   state = { difficulty: false, difficultyLevel: "Easy" };
 
@@ -24,14 +20,19 @@ class HomeComponent extends React.Component {
   };
 
   render() {
-    client.publish(difficulty, this.state.difficultyLevel);
     return (
       <div>
         <header className="Home-header">
           <img src={logo} className="Home-logo" alt="logo" />
           <h1 className="Home-logo-text">SmartCar Shield</h1>
         </header>
-        <NavLink className="active" to="/race">
+        <NavLink
+          className="active"
+          to={{
+            pathname: "/race",
+            state: { level: this.state.difficultyLevel },
+          }}
+        >
           <div className="Home-link">
             <li className="Home-linkItem">Race</li>
           </div>

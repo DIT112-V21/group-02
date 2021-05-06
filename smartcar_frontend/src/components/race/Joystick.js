@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import "./Race.css";
 import ReactNipple from "react-nipple";
-import DebugView from "react-nipple/lib/DebugView";
+//import DebugView from "react-nipple/lib/DebugView";
 
 const mqtt = require("mqtt");
 const client = mqtt.connect("ws://localhost:8888");
@@ -15,6 +15,7 @@ const forward = "/smartcar/control/throttle/forward";
 const reverse = "/smartcar/control/throttle/reverse";
 const left = "/smartcar/control/steering/left";
 const right = "/smartcar/control/steering/right";
+const difficulty = "/smartcar/control/difficulty";
 
 export default class JoyStick extends Component {
   static propTypes = {
@@ -42,6 +43,7 @@ export default class JoyStick extends Component {
       xInitial = data.position.x.toString();
       positionX = xInitial;
       positionY = yInitial;
+      client.publish(difficulty, this.props.level);
       initialised = true;
     }
   };
@@ -74,18 +76,23 @@ export default class JoyStick extends Component {
       client.publish(right, steering.toString());
     }
   };
+
   handleJoystickDir = (evt, data) => {
     this.setState({ data });
   };
+
   handleJoystickPlain = (evt, data) => {
     this.setState({ data });
   };
+
   handleJoystickShown = (evt, data) => {
     this.setState({ data });
   };
+
   handleJoystickHidden = (evt, data) => {
     this.setState({ data });
   };
+
   handleJoystickPressure = (evt, data) => {
     this.setState({ data });
   };

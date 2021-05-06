@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Route, BrowserRouter as Router, NavLink } from "react-router-dom";
+import { Route, BrowserRouter as Router } from "react-router-dom";
 import "./style/App.css";
 import { Race } from "./components/race/Race";
 import LeaderBoard from "./components/leaderboard/LeaderBoard";

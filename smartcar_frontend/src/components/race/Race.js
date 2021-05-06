@@ -4,6 +4,9 @@ import "./Race.css";
 import Camera from "../camera/Camera";
 
 class Race extends Component {
+  state = {
+    level: this.props.location.state.level,
+  };
   render() {
     return (
       <div>
@@ -11,6 +14,7 @@ class Race extends Component {
           <Camera />
         </div>
         <Joystick
+          level={this.state.level}
           className="joystick"
           title="joystick"
           width={600}

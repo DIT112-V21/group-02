@@ -20,7 +20,6 @@ BrushedMotor rightMotor(arduinoRuntime, smartcarlib::pins::v2::rightMotorPins);
 DifferentialControl control(leftMotor, rightMotor);
 
 GY50 gyroscope(arduinoRuntime, 37);
-
 const auto pulsesPerMeter = 600;
 
 DirectionlessOdometer leftOdometer{
@@ -52,6 +51,7 @@ boolean overrideAngle = false;
 boolean overrideSpeed = false;
 String difficultyLevel = "";
 int safetySpeed = 0;
+int carAngle = 0;
 
 //Sensor Setup
 SR04 front(arduinoRuntime, triggerPin, echoPin, maxDistance);
@@ -99,7 +99,8 @@ void setup()
 
 void loop()
 {
-    if (connected())
+    float sonicDistance = front.getDistance();
+    if (connected() && !sensorLimit(sonicDistance, 250))
     {
         mqtt.loop();
         const auto currentTime = millis();
@@ -131,17 +132,14 @@ void handleEasyInput(String topic, String message)
     {
         car.setSpeed(msg);
     }
-    else if (topic == left)
+    else if (topic == left || topic == right)
     {
         car.setAngle(msg);
-    }
-    else if (topic == right)
-    {
-        car.setAngle(msg);
+        carAngle = msg;
     }
     else
     {
-        autodriverEasy(topic, message);
+        avoidObstacleEasy();
         println("input ignored: " + topic + " " + message);
     }
 }
@@ -157,17 +155,14 @@ void handleAmateurInput(String topic, String message)
     {
         car.setSpeed(msg);
     }
-    else if (topic == left)
+    else if (topic == left || topic == right)
     {
         car.setAngle(msg);
-    }
-    else if (topic == right)
-    {
-        car.setAngle(msg);
+        carAngle = msg;
     }
     else
     {
-        autodriverAmateur(topic, message);
+        avoidObstacleAmateur();
         println("input ignored: " + topic + " " + message);
     }
 }
@@ -193,9 +188,9 @@ void obstacleDetection(long currentTime)
     {
         previousCheck = currentTime;
         const auto sonicDistance = String(front.getDistance()).toInt();
-        //const auto IRdistance = String(frontIR.getMedianDistance()).toInt();
-        const auto IRdistance = String(rearIR.getMedianDistance()).toInt();
-        if (checkSensor(sonicDistance, 200))
+        const auto frontIRdistance = String(frontIR.getMedianDistance()).toInt();
+        const auto rearIRdistance = String(rearIR.getMedianDistance()).toInt();
+        if (sensorLimit(sonicDistance, 200))
         {
             if (allowForward)
             {
@@ -208,7 +203,7 @@ void obstacleDetection(long currentTime)
             allowForward = true;
         }
 
-        if (checkSensor(IRdistance, 15))
+        if (sensorLimit(rearIRdistance, 15))
         {
             //println(String(IRdistance));
             if (allowBackward)
@@ -224,9 +219,18 @@ void obstacleDetection(long currentTime)
     }
 }
 
-boolean checkSensor(int sensorData, int max)
+boolean sensorLimit(int sensorData, int max)
 {
-    return (0 < sensorData && sensorData < max);
+    return (sensorData > 0 && sensorData < max);
+}
+
+void avoidObstacleEasy()
+{
+    Serial.print("current angle : " + carAngle);
+}
+
+void avoidObstacleAmateur()
+{
 }
 
 boolean autodriver(String topic, String message)
