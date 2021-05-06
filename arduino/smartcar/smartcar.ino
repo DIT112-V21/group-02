@@ -81,8 +81,18 @@ void setup()
                 difficultyLevel = message;
                 Serial.print("difficulty level is : " + difficultyLevel);
             }
-            else
-                handleInput(topic, message);
+            if (difficultyLevel == "Easy")
+            {
+                handleEasyInput(topic, message);
+            }
+            else if (difficultyLevel == "Amateur")
+            {
+                handleAmateurInput(topic, message);
+            }
+            else if (difficultyLevel == "Bossmode")
+            {
+                handleBossModeInput(topic, message);
+            }
         });
     }
 }
@@ -110,7 +120,7 @@ void loop()
 #endif
 }
 
-void handleInput(String topic, String message)
+void handleEasyInput(String topic, String message)
 {
     int msg = msgToInt(message);
     if (topic == forward && allowForward)
@@ -131,8 +141,47 @@ void handleInput(String topic, String message)
     }
     else
     {
-        autodriver(topic, message);
+        autodriverEasy(topic, message);
         println("input ignored: " + topic + " " + message);
+    }
+}
+
+void handleAmateurInput(String topic, String message)
+{
+    int msg = msgToInt(message);
+    if (topic == forward && allowForward)
+    {
+        car.setSpeed(msg);
+    }
+    else if (topic == reverse && allowBackward)
+    {
+        car.setSpeed(msg);
+    }
+    else if (topic == left)
+    {
+        car.setAngle(msg);
+    }
+    else if (topic == right)
+    {
+        car.setAngle(msg);
+    }
+    else
+    {
+        autodriverAmateur(topic, message);
+        println("input ignored: " + topic + " " + message);
+    }
+}
+
+void handleBossModeInput(String topic, String message)
+{
+    int msg = msgToInt(message);
+    if (topic == forward || topic == reverse)
+    {
+        car.setSpeed(msg);
+    }
+    else if (topic == left || topic == right)
+    {
+        car.setAngle(msg);
     }
 }
 
@@ -179,6 +228,7 @@ boolean checkSensor(int sensorData, int max)
 {
     return (0 < sensorData && sensorData < max);
 }
+
 boolean autodriver(String topic, String message)
 {
     if (topic == forward || topic == reverse)
@@ -186,7 +236,7 @@ boolean autodriver(String topic, String message)
         car.setSpeed(-(message.toInt()));
         println(String(-(message.toInt())));
     }
-    if (topic == "/smartcar/control/steering/#")
+    if (topic == left || topic == right)
     {
         car.setAngle((message.toInt()));
     }
