@@ -34,9 +34,12 @@ DirectionlessOdometer rightOdometer{
     []() { rightOdometer.update(); },
     pulsesPerMeter};
 
+
 //SimpleCar car(control);
 SmartCar car(arduinoRuntime, control, gyroscope, leftOdometer, rightOdometer);
-
+const auto leftDistance = leftOdometer.getDistance();
+const auto rightDistance = rightOdometer.getDistance();
+const auto heading = gyroscope.getHeading();
 const auto oneSecond = 1000UL;
 const auto safetyTime = 100UL;
 const auto triggerPin = 6;
@@ -97,11 +100,26 @@ void loop()
 #endif
         obstacleDetection(currentTime);
     }
+    updateDistance();
+    updateHeading();
 #ifdef __SMCE__
     // Avoid over-using the CPU if we are running in the emulator
     delay(35);
 #endif
 }
+
+void updateDistance()
+{
+    const auto updatedDistance =  leftOdometer.getDistance() - leftDistance;
+    leftDistance = leftDistance.getDistance();
+    mqtt.publish("/smartcar/distance", String(updatedDistance));
+}
+void updateHeading()
+{
+    heading = gyroscope.getHeading();
+    mqtt.publish("/smartcar/heading", String(heading));
+}
+
 void handleInput(String topic, String message)
 {
 

@@ -9,6 +9,7 @@ const Camera = () => {
   const WIDTH = 320;
   const HEIGHT = 240;
   client.on("message", (topic, message) => {
+    console.console.log(message);
     const ctx = document.getElementById("canvas").getContext("2d");
     const canvas = document.getElementById("canvas")
     const arrayBuffer = new ArrayBuffer(WIDTH * HEIGHT * 4);
