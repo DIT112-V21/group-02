@@ -1,6 +1,5 @@
 import React from "react";
-import SpringDemo from "./animatedCar/SpringDemo"
-import Mapping from "./mapping/Mapping"
+import SpringDemo from "./animatedCar/SpringDemo";
 
 //const TimeList = "";
 
@@ -14,7 +13,6 @@ const Times = (props) => {
 
   return (
     <div>
-      <Mapping />
       <h2 className="times-heading">Times</h2>
       <ul>
         <li>

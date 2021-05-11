@@ -34,12 +34,8 @@ DirectionlessOdometer rightOdometer{
     []() { rightOdometer.update(); },
     pulsesPerMeter};
 
-
 //SimpleCar car(control);
 SmartCar car(arduinoRuntime, control, gyroscope, leftOdometer, rightOdometer);
-const auto leftDistance = leftOdometer.getDistance();
-const auto rightDistance = rightOdometer.getDistance();
-const auto heading = gyroscope.getHeading();
 const auto oneSecond = 1000UL;
 const auto safetyTime = 100UL;
 const auto triggerPin = 6;
@@ -54,6 +50,9 @@ boolean allowBackward = true;
 boolean overrideAngle = false;
 boolean overrideSpeed = false;
 int safetySpeed = 0;
+long leftDistance = 0;
+long rightDistance = 0;
+long heading = 0;
 
 //Sensor Setup
 SR04 front(arduinoRuntime, triggerPin, echoPin, maxDistance);
@@ -110,8 +109,8 @@ void loop()
 
 void updateDistance()
 {
-    const auto updatedDistance =  leftOdometer.getDistance() - leftDistance;
-    leftDistance = leftDistance.getDistance();
+    const auto updatedDistance = leftOdometer.getDistance() - leftDistance;
+    leftDistance = leftOdometer.getDistance();
     mqtt.publish("/smartcar/distance", String(updatedDistance));
 }
 void updateHeading()

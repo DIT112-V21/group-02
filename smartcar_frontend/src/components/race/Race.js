@@ -2,6 +2,7 @@ import { React, Component } from "react";
 import Joystick from "./Joystick";
 import "./Race.css";
 import Camera from "../camera/Camera";
+import Mapping from "../mapping/Mapping";
 
 class Race extends Component {
   render() {
@@ -10,6 +11,7 @@ class Race extends Component {
         <div className="race-screen">
           <Camera />
         </div>
+        <Mapping />
         <Joystick
           className="joystick"
           title="joystick"
