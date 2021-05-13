@@ -1,4 +1,5 @@
 import React from "react";
+import "../race/Race.css"
 
 const mqtt = require("mqtt");
 const client = mqtt.connect("ws://localhost:8888");
@@ -40,7 +41,7 @@ const Camera = () => {
       HEIGHT * 6
     );
   });
-  return <canvas id="canvas" height={HEIGHT * 6} width={WIDTH * 6} />;
+  return <canvas id="canvas" height={HEIGHT * 1.5} width={WIDTH * 1.5} className="camera"/>;
 };
 
 export default Camera;

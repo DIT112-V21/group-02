@@ -100,7 +100,6 @@ void loop()
         obstacleDetection(currentTime);
     }
     updateDistance();
-    updateHeading();
 #ifdef __SMCE__
     // Avoid over-using the CPU if we are running in the emulator
     delay(35);
@@ -111,7 +110,11 @@ void updateDistance()
 {
     const auto updatedDistance = leftOdometer.getDistance() - leftDistance;
     leftDistance = leftOdometer.getDistance();
+    if(updatedDistance >= 10)
+    {
     mqtt.publish("/smartcar/distance", String(updatedDistance));
+    updateHeading();
+    }
 }
 void updateHeading()
 {

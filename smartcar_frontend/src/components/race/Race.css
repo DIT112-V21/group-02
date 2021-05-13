@@ -1,6 +1,7 @@
 .race-screen {
-  height: 50vh;
-  width: 100vh;
+  height: 10vh;
+  width: 10vh;
+  display: grid;
   margin: 5vh;
   color: rgb(231, 227, 227);
   border: rgb(216, 228, 54);
@@ -59,4 +60,9 @@
 
 .joystick {
   color: red;
+}
+
+.camera {
+  height: 100%;
+  width: 100%;
 }
