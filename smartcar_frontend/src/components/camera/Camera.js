@@ -6,31 +6,23 @@ const topic = "/smartcar/camera";
 client.subscribe(topic);
 
 const Camera = () => {
-  const WIDTH = 320;
-  const HEIGHT = 240;
+  const WIDTH = 640;
+  const HEIGHT = 480;
   client.on("message", (topic, message) => {
     const ctx = document.getElementById("canvas").getContext("2d");
-    const canvas = document.getElementById("canvas")
-    const arrayBuffer = new ArrayBuffer(WIDTH * HEIGHT * 4);
-    const pixels = new Uint8ClampedArray(arrayBuffer);
-    for (let y = 0; y < HEIGHT; y += 4) {
-      for (let x = 0; x < WIDTH; x += 4) {
-        const i = y * WIDTH + x;
-        pixels[i] = message[3 * i];         // red
-        pixels[i + 1] = message[3 * i + 1]; // green
-        pixels[i + 2] = message[3 * i + 2]; // blue
-        pixels[i + 3] = 255;                // alpha
-      }
+    const image = new Uint8ClampedArray(WIDTH * HEIGHT * 4);
+    let offset = 0;
+    for(let i = 0; i < image.length; i+=4){
+      image[i] = message[i-offset];
+      image[i + 1] = message[i-offset + 1];
+      image[i + 2] = message[i-offset + 2];
+      image[i + 3] = 255;
+      offset++;
     }
-    ctx.webkitImageSmoothingEnabled = false;
-    ctx.mozImageSmoothingEnabled = false;
-    ctx.imageSmoothingEnabled = false;
-    const imageData = new ImageData(pixels, WIDTH, HEIGHT);
+    const imageData = new ImageData(image, WIDTH, HEIGHT);
     ctx.putImageData(imageData, 0, 0);
-    ctx.globalCompositeOperation = 'copy';
-    ctx.drawImage(canvas, 0,0, imageData.width, imageData.height, 0,0, WIDTH*6, HEIGHT*6);
   });
-  return <canvas id="canvas" height={HEIGHT * 6} width={WIDTH*6 }/>;
+  return <canvas id="canvas" height={HEIGHT} width={WIDTH}/>;
 };
 
 export default Camera;

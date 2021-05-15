@@ -66,7 +66,7 @@ void setup()
     Serial.begin(9600);
 #ifdef __SMCE__
     // int OV767X::begin(int resolution, int format, int fps)
-    Camera.begin(QVGA, RGB888, 60);
+    Camera.begin(VGA, RGB888, 60);
     frameBuffer.resize(Camera.width() * Camera.height() * Camera.bytesPerPixel());
     mqtt.begin("127.0.0.1", 1883, WiFi);
     // mqtt.begin(WiFi); // Will connect to localhost
@@ -76,7 +76,7 @@ void setup()
     if (mqtt.connect("arduino", "public", "public"))
     {
         mqtt.subscribe("/smartcar/control/#", 1);
-        mqtt.onMessage([](String topic, String message) {
+        mqtt.onMessage(+[](String& topic, String& message) {
             handleInput(topic, message);
         });
     }
@@ -126,7 +126,6 @@ void handleInput(String topic, String message)
     }
     else
     {
-        autodriver(topic, message);
         println("input ignored: " + topic + " " + message);
     }
 }
