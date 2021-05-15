@@ -17,7 +17,7 @@ class Race extends Component {
           height={600}
           options={{
             mode: "static",
-            color: "green",
+            color: "white",
             position: { top: "70%", left: "50%" },
           }}
         />

@@ -23,6 +23,7 @@ const Camera = () => {
     ctx.putImageData(imageData, 0, 0);
   });
   return <canvas id="canvas" height={HEIGHT} width={WIDTH}/>;
+
 };
 
 export default Camera;

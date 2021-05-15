@@ -9,9 +9,9 @@ const LeaderBoard = (props) => {
       <ul>
         {props.users.map((user) => (
           <li className="leaderboard-row">
-            <h3 className="leaderboard-entry">{placement++}</h3>
-            <h4 className="leaderboard-entry">{user.username}</h4>
-            <h3 className="leaderboard-entry">{user.time}</h3>
+            <span className="leaderboard-entry">{placement++}</span>
+            <span className="leaderboard-entry">{user.username}</span>
+            <span className="leaderboard-entry">{user.time}</span>
           </li>
         ))}
       </ul>
