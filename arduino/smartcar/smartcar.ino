@@ -14,23 +14,28 @@ WiFiClient net;
 #endif
 MQTTClient mqtt;
 
+// smartcarlib::constants::motor::kMaxMotorSpeed = 200;
+
 ArduinoRuntime arduinoRuntime;
 BrushedMotor leftMotor(arduinoRuntime, smartcarlib::pins::v2::leftMotorPins);
 BrushedMotor rightMotor(arduinoRuntime, smartcarlib::pins::v2::rightMotorPins);
 DifferentialControl control(leftMotor, rightMotor);
 
 GY50 gyroscope(arduinoRuntime, 37);
+
 const auto pulsesPerMeter = 600;
 
 DirectionlessOdometer leftOdometer{
     arduinoRuntime,
     smartcarlib::pins::v2::leftOdometerPin,
-    []() { leftOdometer.update(); },
+    []()
+    { leftOdometer.update(); },
     pulsesPerMeter};
 DirectionlessOdometer rightOdometer{
     arduinoRuntime,
     smartcarlib::pins::v2::rightOdometerPin,
-    []() { rightOdometer.update(); },
+    []()
+    { rightOdometer.update(); },
     pulsesPerMeter};
 
 //SimpleCar car(control);
@@ -49,9 +54,8 @@ boolean allowForward = true;
 boolean allowBackward = true;
 boolean overrideAngle = false;
 boolean overrideSpeed = false;
-String difficultyLevel = "";
-int safetySpeed = 0;
 int carAngle = 0;
+int safetySpeed = 0;
 
 //Sensor Setup
 SR04 front(arduinoRuntime, triggerPin, echoPin, maxDistance);
@@ -75,32 +79,14 @@ void setup()
     if (mqtt.connect("arduino", "public", "public"))
     {
         mqtt.subscribe("/smartcar/control/#", 1);
-        mqtt.onMessage([](String topic, String message) {
-            if (topic == difficulty)
-            {
-                difficultyLevel = message;
-                Serial.print("difficulty level is : " + difficultyLevel);
-            }
-            if (difficultyLevel == "Easy")
-            {
-                handleEasyInput(topic, message);
-            }
-            else if (difficultyLevel == "Amateur")
-            {
-                handleAmateurInput(topic, message);
-            }
-            else if (difficultyLevel == "Bossmode")
-            {
-                handleBossModeInput(topic, message);
-            }
-        });
+        mqtt.onMessage([](String topic, String message)
+                       { handleInput(topic, message); });
     }
 }
 
 void loop()
 {
-    float sonicDistance = front.getDistance();
-    if (connected() && !sensorLimit(sonicDistance, 250))
+    if (connected())
     {
         mqtt.loop();
         const auto currentTime = millis();
@@ -120,15 +106,11 @@ void loop()
     delay(35);
 #endif
 }
-
-void handleEasyInput(String topic, String message)
+void handleInput(String topic, String message)
 {
     int msg = msgToInt(message);
-    if (topic == forward && allowForward)
-    {
-        car.setSpeed(msg);
-    }
-    else if (topic == reverse && allowBackward)
+
+    if (topic == forward)
     {
         car.setSpeed(msg);
     }
@@ -137,46 +119,9 @@ void handleEasyInput(String topic, String message)
         car.setAngle(msg);
         carAngle = msg;
     }
-    else
-    {
-        avoidObstacleEasy();
-        println("input ignored: " + topic + " " + message);
-    }
-}
-
-void handleAmateurInput(String topic, String message)
-{
-    int msg = msgToInt(message);
-    if (topic == forward && allowForward)
-    {
-        car.setSpeed(msg);
-    }
     else if (topic == reverse && allowBackward)
     {
         car.setSpeed(msg);
-    }
-    else if (topic == left || topic == right)
-    {
-        car.setAngle(msg);
-        carAngle = msg;
-    }
-    else
-    {
-        avoidObstacleAmateur();
-        println("input ignored: " + topic + " " + message);
-    }
-}
-
-void handleBossModeInput(String topic, String message)
-{
-    int msg = msgToInt(message);
-    if (topic == forward || topic == reverse)
-    {
-        car.setSpeed(msg);
-    }
-    else if (topic == left || topic == right)
-    {
-        car.setAngle(msg);
     }
 }
 
@@ -187,29 +132,18 @@ void obstacleDetection(long currentTime)
     if (currentTime - previousCheck >= safetyTime)
     {
         previousCheck = currentTime;
-        const auto sonicDistance = String(front.getDistance()).toInt();
-        const auto frontIRdistance = String(frontIR.getMedianDistance()).toInt();
-        const auto rearIRdistance = String(rearIR.getMedianDistance()).toInt();
-        if (sensorLimit(sonicDistance, 200))
+        const auto sonicDistance = front.getDistance();
+        //const auto IRdistance = String(frontIR.getMedianDistance()).toInt();
+        const auto IRdistance = rearIR.getMedianDistance();
+        if (checkSensor(sonicDistance, 200))
         {
-            if (allowForward)
-            {
-                car.setSpeed(0);
-            }
             allowForward = false;
-        }
-        else
-        {
-            allowForward = true;
+            autodriver();
+            println("obstacle detected");
         }
 
-        if (sensorLimit(rearIRdistance, 15))
+        if (checkSensor(IRdistance, 15))
         {
-            //println(String(IRdistance));
-            if (allowBackward)
-            {
-                car.setSpeed(0);
-            }
             allowBackward = false;
         }
         else
@@ -219,32 +153,31 @@ void obstacleDetection(long currentTime)
     }
 }
 
-boolean sensorLimit(int sensorData, int max)
+boolean checkSensor(int sensorData, int max)
 {
     return (sensorData > 0 && sensorData < max);
 }
 
-void avoidObstacleEasy()
+void autodriver()
 {
-    Serial.print("current angle : " + carAngle);
-}
-
-void avoidObstacleAmateur()
-{
-}
-
-boolean autodriver(String topic, String message)
-{
-    if (topic == forward || topic == reverse)
+    unsigned int sonicDistance = front.getDistance();
+    if (carAngle <= 0)
     {
-        car.setSpeed(-(message.toInt()));
-        println(String(-(message.toInt())));
+        carAngle = carAngle + 60;
+        car.setAngle(carAngle);
     }
-    if (topic == left || topic == right)
+    else
     {
-        car.setAngle((message.toInt()));
+        carAngle = carAngle - 60;
+        car.setAngle(carAngle);
     }
-    return false;
+    while (sonicDistance > 0 && sonicDistance < 200)
+    {
+        Serial.println("carangle : " + String(carAngle));
+        car.setSpeed(40);
+        sonicDistance = front.getDistance();
+    }
+    allowForward = true;
 }
 
 int msgToInt(String msg)
