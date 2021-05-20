@@ -28,12 +28,14 @@ const auto pulsesPerMeter = 600;
 DirectionlessOdometer leftOdometer{
     arduinoRuntime,
     smartcarlib::pins::v2::leftOdometerPin,
-    []() { leftOdometer.update(); },
+    []()
+    { leftOdometer.update(); },
     pulsesPerMeter};
 DirectionlessOdometer rightOdometer{
     arduinoRuntime,
     smartcarlib::pins::v2::rightOdometerPin,
-    []() { rightOdometer.update(); },
+    []()
+    { rightOdometer.update(); },
     pulsesPerMeter};
 
 //SimpleCar car(control);
@@ -76,9 +78,10 @@ void setup()
     if (mqtt.connect("arduino", "public", "public"))
     {
         mqtt.subscribe("/smartcar/control/#", 1);
-        mqtt.onMessage(+[](String& topic, String& message) {
-            handleInput(topic, message);
-        });
+        mqtt.onMessage(+[](String &topic, String &message)
+                       {
+                           handleInput(topic, message);
+                       });
     }
 }
 
