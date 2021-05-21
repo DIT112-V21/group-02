@@ -29,7 +29,7 @@
     "websocket-stream": "^5.5.2"
   },
   "scripts": {
-    "start": "concurrently \"node index.js\" \"react-scripts start\"",
+    "start": "concurrently \"node index.js\" \"node broker.js\" \"react-scripts start\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
