@@ -23,14 +23,16 @@ GY50 gyroscope(arduinoRuntime, 37);
 
 const auto pulsesPerMeter = 600;
 
-DirectionlessOdometer leftOdometer{
+DirectionalOdometer leftOdometer{
     arduinoRuntime,
-    smartcarlib::pins::v2::leftOdometerPin,
+    35,
+    34,
     []() { leftOdometer.update(); },
     pulsesPerMeter};
-DirectionlessOdometer rightOdometer{
+DirectionalOdometer rightOdometer{
     arduinoRuntime,
-    smartcarlib::pins::v2::rightOdometerPin,
+    36,
+    39,
     []() { rightOdometer.update(); },
     pulsesPerMeter};
 
@@ -52,7 +54,7 @@ boolean overrideSpeed = false;
 int safetySpeed = 0;
 long leftDistance = 0;
 long rightDistance = 0;
-long heading = 0;
+int heading;
 
 //Sensor Setup
 SR04 front(arduinoRuntime, triggerPin, echoPin, maxDistance);
@@ -66,7 +68,7 @@ void setup()
     Serial.begin(9600);
 #ifdef __SMCE__
     // int OV767X::begin(int resolution, int format, int fps)
-    Camera.begin(QVGA, RGB888, 60);
+    Camera.begin(VGA, RGB888, 60);
     frameBuffer.resize(Camera.width() * Camera.height() * Camera.bytesPerPixel());
     mqtt.begin("127.0.0.1", 1883, WiFi);
     // mqtt.begin(WiFi); // Will connect to localhost
@@ -76,7 +78,7 @@ void setup()
     if (mqtt.connect("arduino", "public", "public"))
     {
         mqtt.subscribe("/smartcar/control/#", 1);
-        mqtt.onMessage([](String topic, String message) {
+        mqtt.onMessage(+[](String& topic, String& message) {
             handleInput(topic, message);
         });
     }
@@ -95,11 +97,16 @@ void loop()
             previousFrame = currentTime;
             Camera.readFrame(frameBuffer.data());
             mqtt.publish("/smartcar/camera", frameBuffer.data(), frameBuffer.size(), false, 0);
+
         }
 #endif
-        obstacleDetection(currentTime);
-    }
+    gyroscope.update();
     updateDistance();
+    
+        //obstacleDetection(currentTime);
+        
+    }
+    
 #ifdef __SMCE__
     // Avoid over-using the CPU if we are running in the emulator
     delay(35);
@@ -110,16 +117,18 @@ void updateDistance()
 {
     const auto updatedDistance = leftOdometer.getDistance() - leftDistance;
     leftDistance = leftOdometer.getDistance();
-    if(updatedDistance >= 10)
+    if(updatedDistance >= 1)
     {
-    mqtt.publish("/smartcar/distance", String(updatedDistance));
+    mqtt.publish("/smartcar/direction", String(updatedDistance));
+    println("direction:" + String(leftOdometer.getDirection()));
     updateHeading();
     }
 }
 void updateHeading()
 {
-    heading = gyroscope.getHeading();
-    mqtt.publish("/smartcar/heading", String(heading));
+    //heading = gyroscope.getHeading();
+    mqtt.publish("/smartcar/heading", String(gyroscope.getHeading()));
+    println("heading:" + String(gyroscope.getHeading()));
 }
 
 void handleInput(String topic, String message)
@@ -144,7 +153,7 @@ void handleInput(String topic, String message)
     }
     else
     {
-        autodriver(topic, message);
+       // autodriver(topic, message);
         println("input ignored: " + topic + " " + message);
     }
 }

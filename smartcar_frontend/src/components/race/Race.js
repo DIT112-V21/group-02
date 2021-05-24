@@ -7,15 +7,9 @@ class Race extends Component {
   render() {
     return (
       <div className = "race-screen" >
-        <Camera />
         <Mapping 
           className="mapping"
           title="mapping"
-          width={600}
-          height={600}
-          options={{
-            position: { top: "20%", left: "70%" },
-          }}
         />
         <Joystick
           className="joystick"

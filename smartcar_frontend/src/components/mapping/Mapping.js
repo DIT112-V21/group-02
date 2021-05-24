@@ -2,77 +2,101 @@ import React, { Component } from "react";
 
 const mqtt = require("mqtt");
 const client = mqtt.connect("ws://localhost:8888");
-const TOPIC_DISTANCE = "/smartcar/distance";
+const TOPIC_DISTANCE = "/smartcar/direction";
 const TOPIC_ANGLE = "/smartcar/heading";
 client.subscribe(TOPIC_ANGLE);
 client.subscribe(TOPIC_DISTANCE);
-const WIDTH = 200;
-const HEIGHT = 200;
-const currentPointX = WIDTH / 2;
-const currentPointY = HEIGHT / 2;
-const THREE_SIXTY = 360;
-let map = Create2DArray(WIDTH);
-const cellColor = "#e74c3c";
-const cellSide = 5;
-
+const WIDTH = 50;
+const HEIGHT = 50;
+var map = [];
+let newY = 0;
+let newX = 0;
+const gridSize = 10
+let angle = 0;
 const Mapping = () => {
-  let angle = 0;
+  //draw()
+
 
   // update car angle
   client.on("message", (TOPIC_ANGLE, message) => {
     angle = message;
+    console.log(angle.payloadString)
   });
 
-  //when car move update mapping array
+  //figure out car movements
   client.on("message", (TOPIC_DISTANCE, message) => {
-    let newX =
-      Math.round(cellSide *
-      (Math.cos(((2 * Math.PI) / THREE_SIXTY) * angle) * parseInt(message))); // get x value
 
-    let newY =
-      Math.round(cellSide *
-      (Math.sin(((2 * Math.PI) / THREE_SIXTY) * angle) * parseInt(message))); // get y value
-    // reposition previos positions depending on movements
-     const ctx = document.getElementById("canvas").getContext("2d");
-    for (let y = 0; y < HEIGHT; y++) {
-      for (let x = 0; x < WIDTH; x++) {
-        // if (
-        //   x + newX >= 0 &&
-        //   y + newY >= 0 &&
-        //   x + newX < WIDTH &&
-        //   y + newY < HEIGHT
-        // ) {
-
-       //   map[x + newX][y + newY] = map[x][y];
-        //}
-      }
+    if(angle < 20 || angle > 340){
+      newX = -1
+    }else if((angle < 200 && angle > 160  )){
+      newX = 1;
+    } else 
+    {
+      newX = 0;
     }
-    map[currentPointX][currentPointY] = 1;
-    //draw the canvas
-     for (let y = 0; y < HEIGHT; y++) {
-      for (let x = 0; x < WIDTH; x++) {
-        if(map[x][y] === 1){
-          let j = x * cellSide;
-          let i = y * cellSide;
-          ctx.beginPath();
-          ctx.fillStyle = cellColor;
-          ctx.fillRect(j, i, cellSide, cellSide);
-        }
-
-      }
+    if( angle > 20 && angle < 160 )
+    {
+      newY = -WIDTH;
     }
-  });
-
-  return <canvas id="canvas" />;
-};
-
-function Create2DArray(rows) {
-  var arr = [];
-
-  for (var i = 0; i < rows; i++) {
-    arr[i] = [0];
+    else if(angle > 200 && angle < 340)
+    {
+      newY = WIDTH;
+    } 
+      else
+    {
+      newY = 0;
+    }
+    let direction = 0
+    let speed = message
+    //console.log(speed)
+    if(speed < 0)
+    {
+      direction = -1;
+    }
+    else if(speed > 0)
+    {
+      direction = 1;
+    }
+    //console.log(message);
+    let newPosition = (newX+newY) * direction;
+    // set car position to middle
+    map[(HEIGHT * WIDTH) / 2] = 1;
+    //Reposition previos positions depending on movements
+    const context = document.getElementById("canvas").getContext("2d");
+    for (let x = 0; x < WIDTH; x++) {
+      for (let y = 0; y < HEIGHT; y++) {
+        const i = y * WIDTH + x;
+        if(i + newPosition > 0 && i + newPosition < (WIDTH * HEIGHT)){
+          if(map[i] === 1 && i + newPosition <= WIDTH*(y + 1))
+          {
+            map[i + newPosition] = 1;
+            map[i] = 0;
+          }
+    }
   }
+  }
+  //draw the canvas
+  
 
-  return arr;
-}
+  var j=0
+  for(var a=0;a<=WIDTH * gridSize;a+=gridSize) {
+    for(var b=0; b<=HEIGHT * gridSize; b+=gridSize) {
+    j++;
+      if(map[j] === 1){
+        
+        context.fillStyle = "#FF0000";
+        context.beginPath();
+        context.arc(a, b, 4, 0, 2 * Math.PI);
+      }else{
+        context.fillStyle = "#9FE2BF";  
+        context.beginPath();
+        context.arc(a, b, 5, 0, 2 * Math.PI);
+      }
+      
+      context.fill();
+    }
+  }
+  });
+  return <canvas id="canvas" width={WIDTH * gridSize} height={HEIGHT * gridSize} />;
+};
 export default Mapping;

@@ -54,7 +54,7 @@ export default class JoyStick extends Component {
   };
 
   handleJoystickMove = (evt, data) => {
-    console.log("move");
+    //console.log("move");
     this.setState({ data });
     let yChange = Math.abs(positionY - data.position.y);
     let xChange = Math.abs(positionX - data.position.x);
