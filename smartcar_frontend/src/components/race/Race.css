@@ -1,62 +1,7 @@
 .race-screen {
-  height: 50vh;
-  width: 100vh;
-  margin: 5vh;
+  padding-left: 50vh;
+  padding-top: 5vh;
   color: rgb(231, 227, 227);
   border: rgb(216, 228, 54);
 }
 
-.controller-buttons {
-  justify-content: space-between;
-  color: white;
-  display: grid;
-  margin: auto;
-  grid-template-columns: 60px 60px 60px;
-  grid-template-rows: 60px 60px 60px;
-  height: 60vh;
-  width: 30vh;
-}
-
-.controller-up {
-  grid-column-start: 2;
-  grid-column-end: 3;
-  grid-row-start: 1;
-  grid-row-end: 2;
-  background-color: rgb(185, 41, 41);
-  border-radius: 15px;
-  border-style: none;
-}
-
-.controller-left {
-  grid-column-start: 1;
-  grid-column-end: 2;
-  grid-row-start: 2;
-  grid-row-end: 3;
-  background-color: rgb(123, 123, 224);
-  border-radius: 15px;
-  border-style: none;
-}
-
-.controller-right {
-  grid-column-start: 3;
-  grid-column-end: 4;
-  grid-row-start: 2;
-  grid-row-end: 3;
-  background-color: rgb(42, 146, 42);
-  border-radius: 15px;
-  border-style: none;
-}
-
-.controller-down {
-  grid-column-start: 2;
-  grid-column-end: 3;
-  grid-row-start: 3;
-  grid-row-end: 4;
-  background-color: rgb(216, 228, 54);
-  border-radius: 15px;
-  border-style: none;
-}
-
-.joystick {
-  color: red;
-}

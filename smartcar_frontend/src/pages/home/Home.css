@@ -45,7 +45,7 @@
   background-color: #038c8c;
   padding: 1.5vh;
   border-radius: 15px;
-  margin-bottom: 3vh;
+  margin-bottom: 2vh;
   width: 35vh;
   align-items: center;
   justify-content: center;
@@ -102,7 +102,6 @@
   background-color: #038c8c;
   padding: 2vh;
   border-radius: 15px;
-  margin-bottom: 4vh;
   width: 39vh;
   align-items: center;
   justify-content: center;
@@ -115,7 +114,9 @@
 
 .difficult_options {
   font-size: 28px;
+  margin-bottom: 0;
 }
+
 .DifficultyList:hover {
   transition: all 0.5s ease;
   color: #003436;
@@ -145,15 +146,6 @@
   text-decoration: none;
   border-radius: 50%;
 }
-.difficulty-button[value="Easy"] {
-  background-color: #0bbe32;
-}
-.difficulty-button[value="Amateur"] {
-  background-color: #e0dd00;
-}
-.difficulty-button[value="BossMode"] {
-  background-color: #d60f0f;
-}
 
 .difficulty-button:hover {
   cursor: pointer;
@@ -161,4 +153,9 @@
 
 .background {
   height: 100%;
+}
+
+.home-name-text {
+  margin-left: 4vh;
+  color: white;
 }

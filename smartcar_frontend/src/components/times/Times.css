@@ -1,0 +1,146 @@
+.times-heading {
+  align-items: center;
+  justify-content: center;
+  font-size: calc(30px + 2vmin);
+  color: white;
+  display: flex;
+  margin-left: 20px;
+}
+
+.times-columns {
+  display: flex;
+  background: rgba(3, 140, 140, 0.2);
+  padding: 30px 50px;
+  color: white;
+  margin: 5px 0;
+  font-size: 20px;
+}
+
+.times-user {
+  font-size: large;
+  color: rgb(146, 241, 232);
+  margin-top: 150px;
+  margin-bottom: 0;
+  margin-left: 20px;
+  font-weight: 200;
+}
+
+.times-ul {
+  width: 380px;
+  margin: 100px auto 0;
+  padding: 3px;
+  box-sizing: border-box;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+}
+
+.times-ul .times-li {
+  display: flex;
+  background: rgba(3, 140, 140, 0.2);
+  padding: 30px 40px;
+  color: white;
+  margin: 5px 0;
+  transition: 0.5s;
+  font-size: 18px;
+}
+
+.times-ul .times-li:nth-child(1) {
+  background: rgb(3, 140, 140);
+}
+
+.times-ul .times-li:nth-child(2) {
+  background: rgba(3, 140, 140, 0.7);
+}
+
+.times-column-text:nth-child(1) {
+  width: 200px;
+}
+
+.times-column-text:nth-child(2) {
+  width: 200px;
+}
+
+.times-column-text:nth-child(3) {
+  width: 200px;
+  text-align: center;
+  margin-left: 20px;
+}
+
+/* change this to control course alignment*/
+.times-ul .times-li .times-span:nth-child(1) {
+  width: 300px;
+}
+/* change this to control time alignment: more pixels= more to the right*/
+.times-ul .times-li .times-span:nth-child(2) {
+  width: 200px;
+}
+
+.times-ul .times-li .times-span:nth-child(3) {
+  width: 200px;
+}
+
+.times-ul .times-li:hover {
+  transform: scale(1.06);
+}
+/*The following is css for large screens*/
+@media (min-width: 500px) {
+  .times-heading {
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(40px + 2vmin);
+    color: white;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .times-user {
+    font-size: large;
+    color: turquoise;
+    margin-top: 150px;
+    margin-bottom: 0;
+  }
+
+  .times-ul {
+    width: 800px;
+    margin-top: 0;
+    padding: 10px;
+    box-sizing: border-box;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+  }
+
+  .times-ul .times-li {
+    display: flex;
+    background: rgba(3, 140, 140, 0.2);
+    padding: 30px 50px;
+    color: white;
+    margin: 5px 0;
+    transition: 0.5s;
+    font-size: 20px;
+  }
+
+  .times-ul .times-li:nth-child(1) {
+    background: rgb(3, 140, 140);
+  }
+
+  .times-ul .times-li:nth-child(2) {
+    background: rgba(3, 140, 140, 0.7);
+  }
+  .times-ul .times-li:nth-child(3) {
+    background: rgba(3, 140, 140, 0.4);
+  }
+  /* change this to control track name alignment*/
+  .times-ul .times-li .times-span:nth-child(1) {
+    width: 10px;
+  }
+  /* change this to control time alignment: more pixels= more to the right*/
+  .times-ul .times-li .times-span:nth-child(2) {
+    width: 500px;
+    text-align: center;
+  }
+
+  .leaderboard-ul .leaderboard-li:hover {
+    transform: scale(1.06);
+  }
+}

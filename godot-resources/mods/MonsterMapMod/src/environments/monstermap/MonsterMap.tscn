@@ -1,0 +1,83 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://src/environments/monstermap/run_monster.tscn" type="PackedScene" id=1]
+[ext_resource path="res://src/environments/monstermap/mods.gd" type="Script" id=2]
+[ext_resource path="res://src/environments/monstermap/tubes.tscn" type="PackedScene" id=3]
+[ext_resource path="res://src/environments/monstermap/MonsterMap.gd" type="Script" id=4]
+[ext_resource path="res://src/environments/monstermap/MonsterCamera.tscn" type="PackedScene" id=5]
+
+[sub_resource type="ProceduralSky" id=1]
+sky_top_color = Color( 0, 0, 0, 1 )
+sky_horizon_color = Color( 0.670588, 0.0392157, 0.0235294, 1 )
+sky_curve = 0.0189201
+ground_bottom_color = Color( 0, 0, 0, 1 )
+ground_horizon_color = Color( 0.670588, 0.0392157, 0.0235294, 1 )
+ground_curve = 0.0585636
+sun_latitude = 81.39
+sun_longitude = -28.77
+sun_angle_min = 3.21
+sun_angle_max = 16.07
+sun_curve = 0.0784584
+sun_energy = 43.8
+
+[sub_resource type="Environment" id=2]
+background_mode = 2
+background_sky = SubResource( 1 )
+
+[sub_resource type="BoxShape" id=3]
+extents = Vector3( 0.880033, 0.190424, 1 )
+
+[node name="smce_monster_map" type="Spatial"]
+script = ExtResource( 4 )
+
+[node name="mods" type="Node" parent="."]
+script = ExtResource( 2 )
+
+[node name="Camera" type="Camera" parent="."]
+transform = Transform( 1, 0, 0, 0, 0.939693, 0.34202, 0, -0.34202, 0.939693, 0.310407, 19.896, 28.0975 )
+far = 8192.0
+
+[node name="monster" parent="." instance=ExtResource( 1 )]
+transform = Transform( 3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 60.6413 )
+
+[node name="Growls" parent="monster" index="4"]
+unit_size = 14.0
+max_distance = 20.0
+out_of_range_mode = 0
+
+[node name="Spatial" parent="monster" instance=ExtResource( 5 )]
+transform = Transform( -1.66667, 0, -1.45705e-07, 0, 1.66667, 0, 1.45705e-07, 0, -1.66667, 0.0112124, 5.46428, -31.5437 )
+
+[node name="Camera" parent="monster/Spatial/MonsterCamera/Viewport" index="0"]
+transform = Transform( -1, -2.99003e-08, 8.21506e-08, 0, 0.939693, 0.34202, -8.74228e-08, 0.34202, -0.939693, -1.34677, 20.3488, -32.3551 )
+
+[node name="Map" parent="." instance=ExtResource( 3 )]
+transform = Transform( 20, 0, 0, 0, 20, 0, 0, 0, 20, 758.88, 38.4067, 0 )
+
+[node name="CollisionShape" parent="Map/StaticBody" index="0"]
+visible = false
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource( 2 )
+
+[node name="DirectionalLight" type="DirectionalLight" parent="WorldEnvironment"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 768.889, 1429.86, 0 )
+light_color = Color( 0.505882, 0.133333, 0.133333, 1 )
+light_energy = 5.38
+light_specular = 0.14
+
+[node name="Area" type="Area" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.11735, 0 )
+
+[node name="CollisionShape" type="CollisionShape" parent="Area"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -5.95883, 0 )
+shape = SubResource( 3 )
+
+[connection signal="body_entered" from="Area" to="monster" method="_on_Area_body_entered"]
+[connection signal="body_entered" from="Area" to="mods" method="_on_Area_body_entered"]
+[connection signal="body_exited" from="Area" to="monster" method="_on_Area_body_exited"]
+
+[editable path="monster"]
+[editable path="monster/HPbar"]
+[editable path="monster/Spatial"]
+[editable path="Map"]

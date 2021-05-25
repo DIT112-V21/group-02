@@ -6,12 +6,19 @@ const LeaderBoard = (props) => {
   return (
     <div>
       <h2 className="leaderboard-heading">Leaderboard</h2>
-      <ul>
+      <ul className="leaderboard-ul">
+        <div className="leaderboard-columns">
+          <div className="leaderboard-column-text"></div>
+          <div className="leaderboard-column-text">Username</div>
+          <div className="leaderboard-column-text">Time</div>
+          <div className="leaderboard-column-text">Course</div>
+        </div>
         {props.users.map((user) => (
-          <li className="leaderboard-row">
-            <h3 className="leaderboard-entry">{placement++}</h3>
-            <h4 className="leaderboard-entry">{user.username}</h4>
-            <h3 className="leaderboard-entry">{user.time}</h3>
+          <li className="leaderboard-li">
+            <span className="leaderboard-span">#{placement++}</span>
+            <span className="leaderboard-span">{user.username}</span>
+            <span className="leaderboard-span">{user.time}</span>
+            <span className="leaderboard-span">{user.course}</span>
           </li>
         ))}
       </ul>

@@ -2,7 +2,6 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import logo from "../../resources/logo.png";
 import "./Home.css";
-import Select from "react-select";
 import SpringDemo from "../../components/animatedCar/SpringDemo";
 
 class HomeComponent extends React.Component {
@@ -35,37 +34,16 @@ class HomeComponent extends React.Component {
           <img src={logo} className="Home-logo" alt="logo" />
           <h1 className="Home-logo-text">SmartCar Shield</h1>
         </header>
+        <h4 className="home-name-text">Welcome, {this.props.username}</h4>
         <NavLink
           className="active"
           to={{
             pathname: "/race",
-            state: { level: this.state.difficultyLevel },
+            userProps: { username: this.props.username },
           }}
         >
           <div className="Home-link">
             <li className="Home-linkItem">Race</li>
-          </div>
-        </NavLink>
-        <NavLink
-          className="active"
-          to={{
-            pathname: "/practice",
-            state: { level: this.state.difficultyLevel },
-          }}
-        >
-          <div className="Home-link">
-            <li className="Home-linkItem">Practice</li>
-          </div>
-        </NavLink>
-        <NavLink
-          className="active"
-          to={{
-            pathname: "/monster-run",
-            state: { level: this.state.difficultyLevel },
-          }}
-        >
-          <div className="Home-link">
-            <li className="Home-linkItem">Monster Run</li>
           </div>
         </NavLink>
         <NavLink className="active" to="/LeaderBoard">

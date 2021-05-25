@@ -7,7 +7,7 @@ label{
 }
 
 input {
-    width: 450px;
+    width: 400px;
     height: 70px;
     padding: 12px 20px;
     box-sizing: border-box;
@@ -16,8 +16,7 @@ input {
     letter-spacing: 0.1vh;
     font-family: audiowide;
     text-align: center;
-    margin-top: 8vh;
-    margin-bottom: 3vh;
+    margin-top: 3vh;
 }
 
 button{
@@ -31,6 +30,7 @@ button{
     font-size: 20px;
     letter-spacing: 0.1vh;
     font-family: audiowide;
-    margin-left: 18vh;
-    margin-bottom: 10vh;
+    margin-top: 5vh;
+    margin-left: 37%;
+    margin-bottom: 15vh
 }
