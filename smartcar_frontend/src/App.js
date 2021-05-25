@@ -27,6 +27,8 @@ function App() {
         <Router>
           <Route exact path="/" component={login ? Home : Login} />
           <Route exact path="/race" component={Race} />
+          <Route exact path="/practice" component={Race} />
+          <Route exact path="/monster-run" component={Race} />
           <Route
             exact
             path="/leaderboard"

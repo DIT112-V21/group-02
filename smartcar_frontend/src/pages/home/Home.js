@@ -2,10 +2,19 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import logo from "../../resources/logo.png";
 import "./Home.css";
+import Select from "react-select";
 import SpringDemo from "../../components/animatedCar/SpringDemo";
 
 class HomeComponent extends React.Component {
-  state = { difficulty: false, difficultyLevel: "Easy" };
+  state = {
+    difficulty: false,
+    difficultyLevel: "Easy",
+    options: [
+      { value: "Easy", label: "Easy" },
+      { value: "strawberry", label: "Strawberry" },
+      { value: "vanilla", label: "Vanilla" },
+    ],
+  };
 
   handleDifficulty = (event) => {
     let value = event.target.value;
@@ -37,6 +46,28 @@ class HomeComponent extends React.Component {
             <li className="Home-linkItem">Race</li>
           </div>
         </NavLink>
+        <NavLink
+          className="active"
+          to={{
+            pathname: "/practice",
+            state: { level: this.state.difficultyLevel },
+          }}
+        >
+          <div className="Home-link">
+            <li className="Home-linkItem">Practice</li>
+          </div>
+        </NavLink>
+        <NavLink
+          className="active"
+          to={{
+            pathname: "/monster-run",
+            state: { level: this.state.difficultyLevel },
+          }}
+        >
+          <div className="Home-link">
+            <li className="Home-linkItem">Monster Run</li>
+          </div>
+        </NavLink>
         <NavLink className="active" to="/LeaderBoard">
           <div className="Home-link">
             <li className="Home-linkItem">Leaderboard</li>
@@ -52,15 +83,22 @@ class HomeComponent extends React.Component {
           name="Difficulty"
           id="difficulties"
           onChange={this.handleDifficulty}
+          placeholder="Difficulty"
         >
           <option className="difficult_options" value="Easy">
             Difficulty: Easy
           </option>
-          <option className="difficult_options" value="Amateur">
-            Difficulty: Amateur
+          <option className="difficult_options" value="Medium">
+            Difficulty: Medium
           </option>
-          <option className="difficult_options" value="Bossmode">
-            Difficulty: Bossmode
+          <option className="difficult_options" value="Hard">
+            Difficulty: Hard
+          </option>
+          <option className="difficult_options" value="BossMode">
+            Difficulty: BossMode
+          </option>
+          <option className="difficult_options" value="Extreme">
+            Difficulty: Extreme
           </option>
         </select>
         <SpringDemo />

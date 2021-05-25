@@ -12,13 +12,14 @@ const server = fastify({ logger: true });
 server.register(fastifyCors, {});
 
 server.get("/", async (request, reply) => {
-  const sql = "SELECT * FROM results ORDER BY time ASC;";
+  const sql = "SELECT * FROM racing ORDER BY time ASC;";
   const result = await client.query(sql);
   reply.send(result.rows);
 });
 
 server.post("/", async (request, reply) => {
-  const sql = "INSERT INTO users (name, username) VALUES ($1, $2);";
+  const sql =
+    "INSERT INTO racing (username, time, course) VALUES ($1, $2, $3);";
   const values = [request.body.name, request.body.username];
   const result = await client.query(sql, values);
   reply.send(result);

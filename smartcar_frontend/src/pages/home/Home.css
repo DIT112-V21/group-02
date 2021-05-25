@@ -1,12 +1,12 @@
 .Home-logo {
-  width: 40vh;
+  width: 34vh;
   height: auto;
   pointer-events: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
   .Home-logo {
-    width: 200px;
+    width: 150px;
     height: auto;
   }
 }
@@ -43,9 +43,9 @@
   color: #ffffff;
   list-style-type: none;
   background-color: #038c8c;
-  padding: 2vh;
+  padding: 1.5vh;
   border-radius: 15px;
-  margin-bottom: 4vh;
+  margin-bottom: 3vh;
   width: 35vh;
   align-items: center;
   justify-content: center;
