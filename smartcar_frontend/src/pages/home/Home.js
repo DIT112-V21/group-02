@@ -8,11 +8,6 @@ class HomeComponent extends React.Component {
   state = {
     difficulty: false,
     difficultyLevel: "Easy",
-    options: [
-      { value: "Easy", label: "Easy" },
-      { value: "strawberry", label: "Strawberry" },
-      { value: "vanilla", label: "Vanilla" },
-    ],
   };
 
   handleDifficulty = (event) => {
@@ -44,6 +39,28 @@ class HomeComponent extends React.Component {
         >
           <div className="Home-link">
             <li className="Home-linkItem">Race</li>
+          </div>
+        </NavLink>
+        <NavLink
+          className="active"
+          to={{
+            pathname: "/practice",
+            userProps: { username: this.props.username },
+          }}
+        >
+          <div className="Home-link">
+            <li className="Home-linkItem">Practice</li>
+          </div>
+        </NavLink>
+        <NavLink
+          className="active"
+          to={{
+            pathname: "/monster-run",
+            userProps: { username: this.props.username },
+          }}
+        >
+          <div className="Home-link">
+            <li className="Home-linkItem">Monster Run</li>
           </div>
         </NavLink>
         <NavLink className="active" to="/LeaderBoard">
