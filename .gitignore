@@ -55,6 +55,7 @@ local.py
 # godot stuff we dont need on github
 godot-resources/mods/race_mod/src/environments/race/assets
 godot-resources/mods/RaceAgainstMod/src/environments/raceagainst/assets
+godot-resources/mods/RaceAgainstMod/.imports
 godot-resources/Bugatti/assets
 godot-resources/Bugatti/textures
 godot-resources/Hover/assets
@@ -64,3 +65,4 @@ godot-resources/LamboTerzo/textures
 godot-resources/LowPolyCars/kenney_car_kit
 godot-resources/vroom/assets
 godot-resources/mods/MonsterMapMod/src/environments/monstermap/assets
+godot-resources/mods/MonsterMapMod/.imports
